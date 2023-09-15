@@ -268,7 +268,7 @@ class RtGridEnv(MultiAgentEnv):
                 self.update_path(agent_id)
 
             if np.array_equal(self.agent_position[agent_id], self.goal_position[agent_id]):
-                reward[agent_id] = 10
+                reward[agent_id] = 100
                 self.update_counters(agent_id)
             else:
                 reward[agent_id] = -1
@@ -276,7 +276,7 @@ class RtGridEnv(MultiAgentEnv):
             self.state[agent_id] = np.concatenate([
                 self.agent_position[agent_id],
                 self.goal_position[agent_id],
-                self.radar(self.agent_position[agent_id])
+                self.edge_capacity[self.agent_position[agent_id][0]][self.agent_position[agent_id][1]]
                 ])
         # if all agents are done, set the __all__ flag
         self.done_flag["__all__"] = all(self.done_flag[agent_key] for agent_key in self.done_flag if agent_key.startswith('agent_'))
@@ -377,7 +377,7 @@ class RtGridEnv(MultiAgentEnv):
             individual_state = np.concatenate([
                 self.agent_position[agent_id],
                 self.goal_position[agent_id],
-                self.radar(self.agent_position[agent_id])
+                self.edge_capacity[self.agent_position[agent_id][0]][self.agent_position[agent_id][1]]
                 ])
             self.state[agent_id] = individual_state
 
@@ -400,8 +400,10 @@ class MultiEnv(MultiAgentEnv):
 
         self.action_space = self.current_env.action_space
 
-        max_length = max(item['length'] for item in benchmarks)
-        max_width = max(item['width'] for item in benchmarks)
+        # max_length = max(item['length'] for item in benchmarks)
+        # max_width = max(item['width'] for item in benchmarks)
+        max_length = 80
+        max_width = 40
         self.observation_space = MultiDiscrete([max_length, max_width, max_length, max_width, 2, 2, 2, 2])
 
     def switch_benchmark(self, benchmark_idx):
