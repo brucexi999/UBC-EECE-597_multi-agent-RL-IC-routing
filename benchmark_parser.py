@@ -2,8 +2,7 @@ import os
 import numpy as np
 
 
-def bg_parser():
-    filepath = "/home/brucexi2/DQN_GlobalRouting/GlobalRoutingRL/benchmark/test_benchmark_1.gr"
+def bg_parser(filepath):
     with open(filepath) as file:
         lines = file.readlines()
         for i in range(len(lines)):
